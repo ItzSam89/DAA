@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void merge(vector<int> &arr, int s, int mid, int e, int &comparisons)
+{
+    int n1 = mid - s + 1;
+    int n2 = e - mid;
+
+    vector<int> L(n1), R(n2);
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[s + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    int i = 0, j = 0, k = s;
+    while (i < n1 && j < n2)
+    {
+        if (L[i] <= R[j])
+        {
+            arr[k] = L[i];
+            comparisons++;
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(vector<int> &arr, int s, int e, int &comparisons)
+{
+    if (s < e)
+    {
+        int mid = s + (e - s) / 2;
+
+        mergeSort(arr, s, mid, comparisons);
+        mergeSort(arr, mid + 1, e, comparisons);
+
+        merge(arr, s, mid, e, comparisons);
+    }
+}
+
+int main()
+{
+    vector<int> arr = {12, 11, 13, 5, 6, 7};
+    int comparisons = 0;
+
+    mergeSort(arr, 0, arr.size() - 1, comparisons);
+
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    cout << endl;
+
+    cout << "Number of comparisons: " << comparisons << endl;
+
+    return 0;
+}
